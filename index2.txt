@@ -1,0 +1,15 @@
+Player
+  ↓
+NBA Quiz Pro
+  ↓
+Sign up / Log in
+  ↓
+Play quiz
+  ↓
+Score calculated
+  ↓
+Supabase database
+  ↓
+GLOBAL LEADERBOARD
+  ↓
+Everyone sees the rankings
