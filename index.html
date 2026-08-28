@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NBA Quiz Pro</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at top, #1c4fa3, #071326 65%);
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.logo span {
+    color: #ff7b00;
+}
+
+.stats {
+    display: flex;
+    gap: 15px;
+}
+
+.stat {
+    background: rgba(255,255,255,.1);
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.screen {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.hero h1 {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+
+.hero h1 span {
+    color: #ff7b00;
+}
+
+.hero p {
+    font-size: 20px;
+    color: #d6dcec;
+}
+
+.card {
+    background: rgba(255,255,255,.97);
+    color: #111;
+    border-radius: 22px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    margin-top: 25px;
+}
+
+.difficulty-grid,
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.category-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.choice {
+    border: none;
+    padding: 20px;
+    border-radius: 15px;
+    background: #eef2f8;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.choice:hover {
+    transform: translateY(-3px);
+    background: #dbe7ff;
+}
+
+.choice.selected {
+    background: #ff7b00;
+    color: white;
+}
+
+.primary {
+    width: 100%;
+    border: none;
+    background: #ff7b00;
+    color: white;
+    padding: 17px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+.primary:hover {
+    background: #e66700;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.timer {
+    background: #111d35;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.timer.warning {
+    background: #c62828;
+}
+
+.progress {
+    height: 8px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #ff7b00;
+    transition: width .3s;
+}
+
+.question-number {
+    color: #777;
+    margin-top: 20px;
+}
+
+.question {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.answer {
+    border: 2px solid #ddd;
+    background: #fafafa;
+    padding: 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 17px;
+    text-align: left;
+    transition: .2s;
+}
+
+.answer:hover {
+    border-color: #174ea6;
+    background: #eef4ff;
+}
+
+.answer.correct {
+    background: #b8f5c3;
+    border-color: #28a745;
+}
+
+.answer.wrong {
+    background: #ffbcbc;
+    border-color: #dc3545;
+}
+
+.answer:disabled {
+    cursor: not-allowed;
+}
+
+.question-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: #555;
+}
+
+.streak {
+    color: #ff6500;
+    font-weight: bold;
+}
+
+.result {
+    text-align: center;
+}
+
+.big-score {
+    font-size: 70px;
+    font-weight: 900;
+    color: #ff7b00;
+}
+
+.level-box {
+    background: #eef2f8;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.xp-bar {
+    height: 15px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.xp-progress {
+    height: 100%;
+    background: #ff7b00;
+}
+
+.leaderboard {
+    margin-top: 20px;
+}
+
+.leader-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.menu-buttons button {
+    flex: 1;
+}
+
+.hidden {
+    display: none;
+}
+
+@media(max-width: 700px) {
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .difficulty-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .answers {
+        grid-template-columns: 1fr;
+    }
+
+    .question {
+        font-size: 23px;
+    }
+
+    header {
+        padding: 15px;
+    }
+
+    .stats {
+        font-size: 12px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        NBA<span>QUIZ</span>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            ⭐ XP: <span id="headerXP">0</span>
+        </div>
+
+        <div class="stat">
+            🏆 Level: <span id="headerLevel">1</span>
+        </div>
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- HOME SCREEN -->
+
+<section id="homeScreen" class="screen active">
+
+    <div class="hero">
+
+        <h1>NBA <span>QUIZ</span></h1>
+
+        <p>
+            How well do you really know basketball?
+        </p>
+
+        <div class="card">
+
+            <h2>Choose Difficulty</h2>
+
+            <div class="difficulty-grid">
+
+                <button class="choice" onclick="chooseDifficulty('Easy', this)">
+                    🟢 Easy
+                </button>
+
+                <button class="choice" onclick="chooseDifficulty('Medium', this)">
+                    🟡 Medium
+                </button>
+
+                <button class="choice" onclick="chooseDifficulty('Hard', this)">
+                    🔴 Hard
+                </button>
+
+                <button class="choice" onclick="chooseDifficulty('Impossible', this)">
+                    💀 Impossible
+                </button>
+
+            </div>
+
+
+            <h2>Choose Category</h2>
+
+            <div class="category-grid">
+
+                <button class="choice" onclick="chooseCategory('Players', this)">
+                    👤 Players
+                </button>
+
+                <button class="choice" onclick="chooseCategory('Teams', this)">
+                    🏀 Teams
+                </button>
+
+                <button class="choice" onclick="chooseCategory('History', this)">
+                    📚 History
+                </button>
+
+                <button class="choice" onclick="chooseCategory('Records', this)">
+                    📊 Records
+                </button>
+
+                <button class="choice" onclick="chooseCategory('Rules', this)">
+                    📖 Rules
+                </button>
+
+                <button class="choice" onclick="chooseCategory('Mixed', this)">
+                    🔀 Mixed
+                </button>
+
+            </div>
+
+            <button class="primary" onclick="startQuiz()">
+                START QUIZ 🏀
+            </button>
+
+            <div class="menu-buttons">
+
+                <button class="choice" onclick="showLeaderboard()">
+                    🏆 Leaderboard
+                </button>
+
+                <button class="choice" onclick="showStats()">
+                    📊 My Stats
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- QUIZ SCREEN -->
+
+<section id="quizScreen" class="screen">
+
+    <div class="card">
+
+        <div class="topbar">
+
+            <div>
+                Question
+                <strong>
+                    <span id="questionNumber">1</span>
+                </strong>
+            </div>
+
+            <div class="timer" id="timer">
+                ⏱️ 30
+            </div>
+
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="question-number">
+            NBA QUIZ
+        </div>
+
+        <div class="question" id="question">
+            Question goes here
+        </div>
+
+        <div class="answers" id="answers"></div>
+
+        <div class="question-info">
+
+            <span>
+                Score: <strong id="score">0</strong>
+            </span>
+
+            <span class="streak">
+                🔥 Streak:
+                <span id="streak">0</span>
+            </span>
+
+        </div>
+
+        <button
+            id="nextButton"
+            class="primary hidden"
+            onclick="nextQuestion()">
+            NEXT QUESTION →
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- RESULTS -->
+
+<section id="resultScreen" class="screen">
+
+    <div class="card result">
+
+        <h1>🏆 QUIZ COMPLETE!</h1>
+
+        <p>Your score</p>
+
+        <div class="big-score">
+            <span id="finalScore">0</span>/10
+        </div>
+
+        <h2 id="resultMessage">
+            Great job!
+        </h2>
+
+        <div class="level-box">
+
+            <h3>
+                ⭐ Level <span id="resultLevel">1</span>
+            </h3>
+
+            <p>
+                XP: <span id="resultXP">0</span>
+            </p>
+
+            <div class="xp-bar">
+                <div
+                    class="xp-progress"
+                    id="xpProgress">
+                </div>
+            </div>
+
+        </div>
+
+        <button
+            class="primary"
+            onclick="returnHome()">
+            PLAY AGAIN
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- LEADERBOARD -->
+
+<section id="leaderboardScreen" class="screen">
+
+    <div class="card">
+
+        <h1>🏆 Leaderboard</h1>
+
+        <div id="leaderboard"></div>
+
+        <button
+            class="primary"
+            onclick="returnHome()">
+            ← BACK
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- STATS -->
+
+<section id="statsScreen" class="screen">
+
+    <div class="card">
+
+        <h1>📊 My Statistics</h1>
+
+        <div class="leader-row">
+            <strong>Games Played</strong>
+            <span id="gamesPlayed">0</span>
+        </div>
+
+        <div class="leader-row">
+            <strong>Questions Answered</strong>
+            <span id="questionsAnswered">0</span>
+        </div>
+
+        <div class="leader-row">
+            <strong>Correct Answers</strong>
+            <span id="correctAnswers">0</span>
+        </div>
+
+        <div class="leader-row">
+            <strong>Best Streak</strong>
+            <span id="bestStreak">0</span>
+        </div>
+
+        <div class="leader-row">
+            <strong>Total XP</strong>
+            <span id="totalXP">0</span>
+        </div>
+
+        <button
+            class="primary"
+            onclick="returnHome()">
+            ← BACK
+        </button>
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   QUESTION DATABASE
+========================= */
+
+const questions = [
+
+{
+question: "Who has scored the most points in NBA regular-season history?",
+answers: [
+"LeBron James",
+"Kareem Abdul-Jabbar",
+"Karl Malone",
+"Kobe Bryant"
+],
+correct: 0,
+difficulty: "Easy",
+category: "Records"
+},
+
+{
+question: "Which team drafted Kobe Bryant in the 1996 NBA Draft?",
+answers: [
+"Los Angeles Lakers",
+"Charlotte Hornets",
+"Philadelphia 76ers",
+"Chicago Bulls"
+],
+correct: 1,
+difficulty: "Medium",
+category: "Players"
+},
+
+{
+question: "Who won the 2016 NBA Finals?",
+answers: [
+"Golden State Warriors",
+"Cleveland Cavaliers",
+"Miami Heat",
+"San Antonio Spurs"
+],
+correct: 1,
+difficulty: "Easy",
+category: "History"
+},
+
+{
+question: "Who wears number 30 for the Golden State Warriors?",
+answers: [
+"Klay Thompson",
+"Draymond Green",
+"Stephen Curry",
+"Chris Paul"
+],
+correct: 2,
+difficulty: "Easy",
+category: "Players"
+},
+
+{
+question: "How many points is a free throw worth?",
+answers: [
+"1",
+"2",
+"3",
+"4"
+],
+correct: 0,
+difficulty: "Easy",
+category: "Rules"
+},
+
+{
+question: "Who is known as the Greek Freak?",
+answers: [
+"Nikola Jokic",
+"Giannis Antetokounmpo",
+"Luka Doncic",
+"Joel Embiid"
+],
+correct: 1,
+difficulty: "Easy",
+category: "Players"
+},
+
+{
+question: "Which team plays at Madison Square Garden?",
+answers: [
+"Brooklyn Nets",
+"New York Knicks",
+"Boston Celtics",
+"Chicago Bulls"
+],
+correct: 1,
+difficulty: "Easy",
+category: "Teams"
+},
+
+{
+question: "Who won the 2020 NBA Finals?",
+answers: [
+"Miami Heat",
+"Los Angeles Lakers",
+"Denver Nuggets",
+"Boston Celtics"
+],
+correct: 1,
+difficulty: "Easy",
+category: "History"
+},
+
+{
+question: "Which player is nicknamed The King?",
+answers: [
+"Stephen Curry",
+"Kevin Durant",
+"LeBron James",
+"James Harden"
+],
+correct: 2,
+difficulty: "Easy",
+category: "Players"
+},
+
+{
+question: "How many players from one team are on the court during normal NBA play?",
+answers: [
+"4",
+"5",
+"6",
+"7"
+],
+correct: 1,
+difficulty: "Easy",
+category: "Rules"
+},
+
+{
+question: "Which franchise originally drafted Dirk Nowitzki?",
+answers: [
+"Dallas Mavericks",
+"Milwaukee Bucks",
+"Phoenix Suns",
+"Chicago Bulls"
+],
+correct: 1,
+difficulty: "Hard",
+category: "Players"
+},
+
+{
+question: "Who won Finals MVP in the 2014 NBA Finals?",
+answers: [
+"Tim Duncan",
+"LeBron James",
+"Kawhi Leonard",
+"Tony Parker"
+],
+correct: 2,
+difficulty: "Medium",
+category: "History"
+},
+
+{
+question: "Which NBA team has won the most championships?",
+answers: [
+"Los Angeles Lakers",
+"Boston Celtics",
+"Chicago Bulls",
+"Golden State Warriors"
+],
+correct: 1,
+difficulty: "Medium",
+category: "Records"
+},
+
+{
+question: "Who recorded the NBA's first officially recognized quadruple-double?",
+answers: [
+"Nate Thurmond",
+"David Robinson",
+"Hakeem Olajuwon",
+"Alvin Robertson"
+],
+correct: 0,
+difficulty: "Impossible",
+category: "History"
+},
+
+{
+question: "Who won the 2015 NBA Finals?",
+answers: [
+"Cleveland Cavaliers",
+"Golden State Warriors",
+"San Antonio Spurs",
+"Miami Heat"
+],
+correct: 1,
+difficulty: "Medium",
+category: "History"
+},
+
+{
+question: "Which player won the 2023 NBA Finals MVP award?",
+answers: [
+"Nikola Jokic",
+"Jimmy Butler",
+"Jamal Murray",
+"LeBron James"
+],
+correct: 0,
+difficulty: "Easy",
+category: "Players"
+},
+
+{
+question: "Which team drafted Stephen Curry?",
+answers: [
+"Golden State Warriors",
+"Charlotte Bobcats",
+"New York Knicks",
+"Phoenix Suns"
+],
+correct: 1,
+difficulty: "Medium",
+category: "Players"
+},
+
+{
+question: "How long is an NBA game in regulation?",
+answers: [
+"40 minutes",
+"48 minutes",
+"50 minutes",
+"60 minutes"
+],
+correct: 1,
+difficulty: "Easy",
+category: "Rules"
+},
+
+{
+question: "Which player won four consecutive MVP awards from 1984-1987?",
+answers: [
+"Larry Bird",
+"Magic Johnson",
+"Michael Jordan",
+"Moses Malone"
+],
+correct: 0,
+difficulty: "Hard",
+category: "History"
+},
+
+{
+question: "Who was the first unanimous NBA MVP?",
+answers: [
+"Stephen Curry",
+"LeBron James",
+"Michael Jordan",
+"Shaquille O'Neal"
+],
+correct: 0,
+difficulty: "Hard",
+category: "History"
+}
+
+];
+
+
+let selectedDifficulty = "Easy";
+let selectedCategory = "Mixed";
+
+let quizQuestions = [];
+let currentQuestion = 0;
+let score = 0;
+let streak = 0;
+let bestCurrentStreak = 0;
+let timer;
+let timeLeft = 30;
+
+
+/* =========================
+   PLAYER DATA
+========================= */
+
+let playerData = JSON.parse(
+    localStorage.getItem("nbaQuizPlayer")
+) || {
+
+    xp: 0,
+    level: 1,
+    games: 0,
+    answered: 0,
+    correct: 0,
+    bestStreak: 0
+
+};
+
+
+function savePlayerData() {
+
+    localStorage.setItem(
+        "nbaQuizPlayer",
+        JSON.stringify(playerData)
+    );
+
+    updateHeader();
+
+}
+
+
+function updateHeader() {
+
+    document.getElementById("headerXP").textContent =
+        playerData.xp;
+
+    document.getElementById("headerLevel").textContent =
+        playerData.level;
+
+}
+
+
+updateHeader();
+
+
+/* =========================
+   SCREEN CONTROL
+========================= */
+
+function showScreen(id) {
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+            screen.classList.remove("active");
+        });
+
+    document
+        .getElementById(id)
+        .classList.add("active");
+
+}
+
+
+function returnHome() {
+
+    clearInterval(timer);
+
+    showScreen("homeScreen");
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function chooseDifficulty(level, button) {
+
+    selectedDifficulty = level;
+
+    document
+        .querySelectorAll(".difficulty-grid .choice")
+        .forEach(b => b.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+}
+
+
+function chooseCategory(category, button) {
+
+    selectedCategory = category;
+
+    document
+        .querySelectorAll(".category-grid .choice")
+        .forEach(b => b.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+}
+
+
+/* =========================
+   START QUIZ
+========================= */
+
+function startQuiz() {
+
+    let filtered = questions.filter(q => {
+
+        const difficultyMatch =
+            q.difficulty === selectedDifficulty;
+
+        const categoryMatch =
+            selectedCategory === "Mixed" ||
+            q.category === selectedCategory;
+
+        return difficultyMatch && categoryMatch;
+
+    });
+
+
+    if (filtered.length < 10) {
+
+        filtered = questions.filter(q => {
+
+            const difficultyMatch =
+                q.difficulty === selectedDifficulty;
+
+            return difficultyMatch;
+
+        });
+
+    }
+
+
+    if (filtered.length === 0) {
+
+        filtered = questions;
+
+    }
+
+
+    quizQuestions =
+        [...filtered]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10);
+
+
+    currentQuestion = 0;
+    score = 0;
+    streak = 0;
+    bestCurrentStreak = 0;
+
+    document.getElementById("score").textContent = 0;
+    document.getElementById("streak").textContent = 0;
+
+    showScreen("quizScreen");
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   SHOW QUESTION
+========================= */
+
+function showQuestion() {
+
+    clearInterval(timer);
+
+    timeLeft = 30;
+
+    updateTimer();
+
+    timer = setInterval(() => {
+
+        timeLeft--;
+
+        updateTimer();
+
+        if (timeLeft <= 0) {
+
+            clearInterval(timer);
+
+            timeUp();
+
+        }
+
+    }, 1000);
+
+
+    const q = quizQuestions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+        currentQuestion + 1;
+
+    document.getElementById("question").textContent =
+        q.question;
+
+    document.getElementById("progressBar").style.width =
+        `${(currentQuestion / quizQuestions.length) * 100}%`;
+
+    const answers =
+        document.getElementById("answers");
+
+    answers.innerHTML = "";
+
+
+    q.answers.forEach((answer, index) => {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "answer";
+
+        button.textContent = answer;
+
+        button.onclick = () =>
+            selectAnswer(index);
+
+        answers.appendChild(button);
+
+    });
+
+
+    document
+        .getElementById("nextButton")
+        .classList.add("hidden");
+
+}
+
+
+function updateTimer() {
+
+    const timerElement =
+        document.getElementById("timer");
+
+    timerElement.textContent =
+        `⏱️ ${timeLeft}`;
+
+    if (timeLeft <= 10) {
+
+        timerElement.classList.add("warning");
+
+    } else {
+
+        timerElement.classList.remove("warning");
+
+    }
+
+}
+
+
+/* =========================
+   ANSWER
+========================= */
+
+function selectAnswer(index) {
+
+    clearInterval(timer);
+
+    const q = quizQuestions[currentQuestion];
+
+    const buttons =
+        document.querySelectorAll(".answer");
+
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+
+    playerData.answered++;
+
+
+    if (index === q.correct) {
+
+        buttons[index].classList.add("correct");
+
+        score++;
+
+        streak++;
+
+        playerData.correct++;
+
+        if (streak > playerData.bestStreak) {
+            playerData.bestStreak = streak;
+        }
+
+        if (streak > bestCurrentStreak) {
+            bestCurrentStreak = streak;
+        }
+
+    } else {
+
+        buttons[index].classList.add("wrong");
+
+        buttons[q.correct].classList.add("correct");
+
+        streak = 0;
+
+    }
+
+
+    document.getElementById("score").textContent =
+        score;
+
+    document.getElementById("streak").textContent =
+        streak;
+
+
+    document
+        .getElementById("nextButton")
+        .classList.remove("hidden");
+
+}
+
+
+function timeUp() {
+
+    const q = quizQuestions[currentQuestion];
+
+    const buttons =
+        document.querySelectorAll(".answer");
+
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+
+    buttons[q.correct].classList.add("correct");
+
+    streak = 0;
+
+    document.getElementById("streak").textContent =
+        streak;
+
+    playerData.answered++;
+
+
+    document
+        .getElementById("nextButton")
+        .classList.remove("hidden");
+
+}
+
+
+/* =========================
+   NEXT QUESTION
+========================= */
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    if (currentQuestion >= quizQuestions.length) {
+
+        finishQuiz();
+
+    } else {
+
+        showQuestion();
+
+    }
+
+}
+
+
+/* =========================
+   FINISH
+========================= */
+
+function finishQuiz() {
+
+    clearInterval(timer);
+
+    playerData.games++;
+
+    const xpEarned =
+        score * 25 +
+        bestCurrentStreak * 10;
+
+    playerData.xp += xpEarned;
+
+
+    while (
+        playerData.xp >=
+        playerData.level * 500
+    ) {
+
+        playerData.xp -=
+            playerData.level * 500;
+
+        playerData.level++;
+
+    }
+
+
+    savePlayerData();
+
+
+    document.getElementById("finalScore").textContent =
+        score;
+
+    document.getElementById("resultLevel").textContent =
+        playerData.level;
+
+    document.getElementById("resultXP").textContent =
+        playerData.xp;
+
+
+    const requiredXP =
+        playerData.level * 500;
+
+    const percentage =
+        (playerData.xp / requiredXP) * 100;
+
+
+    document.getElementById("xpProgress").style.width =
+        `${percentage}%`;
+
+
+    let message;
+
+
+    if (score === 10) {
+
+        message = "🔥 PERFECT GAME! You are an NBA legend!";
+
+    } else if (score >= 8) {
+
+        message = "🏆 Incredible! You really know your NBA!";
+
+    } else if (score >= 6) {
+
+        message = "👏 Great job! Keep grinding!";
+
+    } else if (score >= 4) {
+
+        message = "🏀 Not bad! Time to study some NBA history.";
+
+    } else {
+
+        message = "💪 Keep practicing! You'll get there.";
+
+    }
+
+
+    document.getElementById("resultMessage").textContent =
+        message;
+
+
+    addLeaderboardScore(score);
+
+    showScreen("resultScreen");
+
+}
+
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+function addLeaderboardScore(score) {
+
+    let leaderboard =
+        JSON.parse(
+            localStorage.getItem("nbaQuizLeaderboard")
+        ) || [];
+
+
+    let name =
+        localStorage.getItem("nbaQuizName");
+
+
+    if (!name) {
+
+        name =
+            prompt("Enter your name for the leaderboard:");
+
+        if (!name) {
+            name = "Player";
+        }
+
+        localStorage.setItem(
+            "nbaQuizName",
+            name
+        );
+
+    }
+
+
+    leaderboard.push({
+
+        name: name,
+        score: score,
+        date: new Date().toLocaleDateString()
+
+    });
+
+
+    leaderboard.sort(
+        (a, b) => b.score - a.score
+    );
+
+
+    leaderboard =
+        leaderboard.slice(0, 10);
+
+
+    localStorage.setItem(
+        "nbaQuizLeaderboard",
+        JSON.stringify(leaderboard)
+    );
+
+}
+
+
+/* =========================
+   DISPLAY LEADERBOARD
+========================= */
+
+function showLeaderboard() {
+
+    const leaderboard =
+        JSON.parse(
+            localStorage.getItem("nbaQuizLeaderboard")
+        ) || [];
+
+
+    const container =
+        document.getElementById("leaderboard");
+
+
+    if (leaderboard.length === 0) {
+
+        container.innerHTML =
+            "<p>No scores yet. Be the first!</p>";
+
+    } else {
+
+        container.innerHTML =
+            leaderboard.map((player, index) => {
+
+                let medal =
+                    index === 0 ? "🥇" :
+                    index === 1 ? "🥈" :
+                    index === 2 ? "🥉" :
+                    `${index + 1}.`;
+
+                return `
+
+                <div class="leader-row">
+
+                    <strong>
+                        ${medal} ${player.name}
+                    </strong>
+
+                    <span>
+                        ${player.score}/10
+                    </span>
+
+                </div>
+
+                `;
+
+            }).join("");
+
+    }
+
+
+    showScreen("leaderboardScreen");
+
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+function showStats() {
+
+    document.getElementById("gamesPlayed").textContent =
+        playerData.games;
+
+    document.getElementById("questionsAnswered").textContent =
+        playerData.answered;
+
+    document.getElementById("correctAnswers").textContent =
+        playerData.correct;
+
+    document.getElementById("bestStreak").textContent =
+        playerData.bestStreak;
+
+    document.getElementById("totalXP").textContent =
+        playerData.xp;
+
+
+    showScreen("statsScreen");
+
+}
+
+</script>
+
+</body>
+</html>
